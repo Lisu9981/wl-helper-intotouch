@@ -116,27 +116,27 @@
   </style>
 </head>
 <body>
-
+ 
 <div class="container">
   <header>
     <h1>IntoTouch WL Helper</h1>
     <p style="color:#d1d1d1; margin-top:8px;">Notatka Whitelist</p>
   </header>
-
+ 
   <div class="section">
     <label>Imię:</label>
     <input type="text" id="imie" placeholder="np. Adam">
-
+ 
     <label>Wiek:</label>
     <input type="number" id="wiek" min="16" max="80" placeholder="np. 28">
-
+ 
     <label>Serwery, na których grałeś wcześniej:</label>
     <textarea id="serwery" rows="3" placeholder="Pixa, Atlantis, Wyspa, inne..."></textarea>
-
-     <label>Discord ID:</label>
+ 
+    <label>Discord ID:</label>
     <input type="text" id="discord" placeholder="np. adam#1234 lub 123456789012345678">
   </div>
-
+ 
   <div class="section">
     <h2>Pomysł na postać</h2>
     <div class="radio-group">
@@ -148,32 +148,32 @@
       <label><input type="radio" name="frakcja" value="Cywil"> Cywil / Biznes / Inne</label>
     </div>
   </div>
-
+ 
   <button id="rozpocznij">Rozpocznij pytania →</button>
-
+ 
   <div id="etapy" class="hidden">
     <div class="section" id="etap-regulamin">
       <h2>Regulamin</h2>
       <div id="pytania-regulamin"></div>
       <button id="dalej-kreatywnosc">Dalej → Kreatywność</button>
     </div>
-
+ 
     <div class="section hidden" id="etap-kreatywnosc">
       <h2>Kreatywność</h2>
       <div id="pytania-kreatywnosc"></div>
       <button id="dalej-lore">Dalej → Lore</button>
     </div>
-
+ 
     <div class="section hidden" id="etap-lore">
       <h2>Lore postaci</h2>
       <div id="pytania-lore"></div>
       <button id="zakoncz">Zakończ i wygeneruj podsumowanie</button>
     </div>
   </div>
-
+ 
   <div id="wynik" class="hidden"></div>
 </div>
-
+ 
 <script>
 // ────────────────────────────────────────────────
 // Pula pytań – możesz dowolnie rozszerzać
@@ -211,7 +211,7 @@ const pulaPytan = {
     "Drugi gracz teleportuje się podczas chodzenia, jak poinformujesz go o tym aby podskoczył?",
     "Gracz odgrywa na /me, że wyciąga z kieszeni kolegi portfel i odgrywa na /do że nie był w stanie tego wyczuć. Czy zostało to prawidłowo odegrane?",
     "Jak odegrasz na opisie, że jesteś stary i wysoki?",
-
+ 
   ],
   lore: [
   "Czy dostaniesz się autem z Los Santos do San Francisco?",
@@ -224,10 +224,10 @@ const pulaPytan = {
   ]
 };
 // ────────────────────────────────────────────────
-
+ 
 let pytaniaWybrane = {};
 let grupyRadio = [];
-
+ 
 function losujPytania(kategoria, ile = 4) {
   const pula = pulaPytan[kategoria] || [];
   if (pula.length === 0) return [];
@@ -239,7 +239,7 @@ function losujPytania(kategoria, ile = 4) {
   }
   return wylosowane;
 }
-
+ 
 function stworzPytanieHTML(kategoria, tresc, index) {
   const name = `ocena-${kategoria}-${index}`;
   grupyRadio.push(name);
@@ -251,7 +251,7 @@ function stworzPytanieHTML(kategoria, tresc, index) {
     </div>
   `;
 }
-
+ 
 function renderujPytania(kategoria) {
   const kontener = document.getElementById(`pytania-${kategoria}`);
   kontener.innerHTML = '';
@@ -260,75 +260,78 @@ function renderujPytania(kategoria) {
     kontener.innerHTML += stworzPytanieHTML(kategoria, p, i);
   });
 }
-
+ 
 function pokazEtap(id) {
   document.querySelectorAll('#etapy > .section').forEach(el => el.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
 }
-
+ 
 function generujPodsumowanie() {
   const imie    = document.getElementById('imie').value.trim()    || '[brak]';
   const wiek    = document.getElementById('wiek').value.trim()    || '[brak]';
   const serwery = document.getElementById('serwery').value.trim() || '[brak]';
+  const discord = document.getElementById('discord').value.trim() || '[brak]';
   const frakcja = document.querySelector('input[name="frakcja"]:checked')?.value || 'Cywil';
-
+ 
   const bledy = grupyRadio.reduce((sum, name) => {
+    if (name.startsWith('ocena-lore-')) return sum;
     const radio = document.querySelector(`input[name="${name}"]:checked`);
     return sum + (radio?.value === 'zle' ? 1 : 0);
   }, 0);
-
+ 
   const linie = [
     "```md",
     "# IntoTouch WL – Podsumowanie rekrutacji",
     "",
     `**Imię postaci:** ${imie}`,
     `**Wiek postaci:** ${wiek}`,
+    `**Discord ID:** ${discord}`,
     `**Serwery wcześniej:** ${serwery}`,
     `**Pomysł na postać / frakcję:** ${frakcja}`,
     "",
     "## Regulamin",
   ];
-
+ 
   (pytaniaWybrane.regulamin || []).forEach((pyt, i) => {
     const name = `ocena-regulamin-${i}`;
     const radio = document.querySelector(`input[name="${name}"]:checked`);
     const ocena = radio?.value === 'dobrze' ? '✅ Dobrze' : '❌ Źle';
     linie.push(`- **${pyt}** → ${ocena}`);
   });
-
+ 
   linie.push("");
   linie.push("## Kreatywność");
-
+ 
   (pytaniaWybrane.kreatywnosc || []).forEach((pyt, i) => {
     const name = `ocena-kreatywnosc-${i}`;
     const radio = document.querySelector(`input[name="${name}"]:checked`);
     const ocena = radio?.value === 'dobrze' ? '✅ Dobrze' : '❌ Źle';
     linie.push(`- **${pyt}** → ${ocena}`);
   });
-
+ 
   linie.push("");
   linie.push("## Lore postaci");
-
+ 
   (pytaniaWybrane.lore || []).forEach((pyt, i) => {
     const name = `ocena-lore-${i}`;
     const radio = document.querySelector(`input[name="${name}"]:checked`);
     const ocena = radio?.value === 'dobrze' ? '✅ Dobrze' : '❌ Źle';
     linie.push(`- **${pyt}** → ${ocena}`);
   });
-
+ 
   linie.push("");
-  linie.push(`**Łączna liczba błędów:** ${bledy}/∞`);
+  linie.push(`**Błędy (Regulamin + Kreatywność):** ${bledy}`);
   linie.push(bledy <= 2
     ? "**WERDYKT:** ZDAŁ POZYTYWNIE ✅"
     : "**WERDYKT:** DO POPRAWY / NIE ZDAŁ ❌");
   linie.push("```");
-
+ 
   const tekst = linie.join('\n');
-
+ 
   const div = document.getElementById('wynik');
   div.textContent = tekst;
   div.classList.remove('hidden');
-
+ 
   const blob = new Blob([tekst], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -338,39 +341,39 @@ function generujPodsumowanie() {
   a.style.cssText = 'display:block; margin:24px 0; padding:14px 28px; background:#ff6f00; color:#0f0c29; border-radius:50px; text-align:center; font-weight:bold; text-decoration:none; box-shadow:0 4px 15px rgba(255,111,0,0.5);';
   div.appendChild(a);
 }
-
+ 
 // ─── Eventy ──────────────────────────────────────
-
+ 
 document.getElementById('rozpocznij').addEventListener('click', () => {
   if (!document.getElementById('imie').value.trim()) {
     return alert('Podaj imię postaci!');
   }
-
+ 
   // Losowanie pytań na każdą nową sesję
   pytaniaWybrane.regulamin    = losujPytania('regulamin', 4);
   pytaniaWybrane.kreatywnosc  = losujPytania('kreatywnosc', 3);
   pytaniaWybrane.lore         = losujPytania('lore', 3);
-
+ 
   grupyRadio = [];
-
+ 
   document.getElementById('rozpocznij').classList.add('hidden');
   document.getElementById('etapy').classList.remove('hidden');
   document.getElementById('etap-regulamin').classList.remove('hidden');
   renderujPytania('regulamin');
 });
-
+ 
 document.getElementById('dalej-kreatywnosc').addEventListener('click', () => {
   document.getElementById('etap-regulamin').classList.add('hidden');
   document.getElementById('etap-kreatywnosc').classList.remove('hidden');
   renderujPytania('kreatywnosc');
 });
-
+ 
 document.getElementById('dalej-lore').addEventListener('click', () => {
   document.getElementById('etap-kreatywnosc').classList.add('hidden');
   document.getElementById('etap-lore').classList.remove('hidden');
   renderujPytania('lore');
 });
-
+ 
 document.getElementById('zakoncz').addEventListener('click', generujPodsumowanie);
 </script>
 </body>
