@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>inTouch WL Helper – Notatka</title>
+  <title>IntoTouch WL Helper – Rekrutacja</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -243,6 +243,21 @@ function losujPytania(kategoria, ile = 4) {
 function stworzPytanieHTML(kategoria, tresc, index) {
   const name = `ocena-${kategoria}-${index}`;
   grupyRadio.push(name);
+ 
+  if (kategoria === 'kreatywnosc') {
+    return `
+      <div style="margin: 18px 0; padding: 12px; background: rgba(255,111,0,0.08); border-radius: 8px;">
+        <strong style="color:#ffd700;">${tresc}</strong><br><br>
+        <label style="color:#e0e0ff;"><input type="radio" name="${name}" value="dobrze"> ✅ Dobrze</label>
+        <label style="color:#e0e0ff;"><input type="radio" name="${name}" value="zle" checked> ❌ Źle</label>
+        <div style="margin-top:10px;">
+          <label style="color:#a0a0cc; font-size:0.9em;">Notatka z odpowiedzi (opcjonalnie):</label>
+          <textarea id="notatka-kreatywnosc-${index}" rows="2" placeholder="Wpisz odpowiedź kandydata..." style="margin-top:4px; width:100%; padding:8px; background:rgba(255,255,255,0.06); border:1px solid #ffd900c0; border-radius:6px; color:#fff; font-size:14px; box-sizing:border-box; resize:vertical;"></textarea>
+        </div>
+      </div>
+    `;
+  }
+ 
   return `
     <div style="margin: 18px 0; padding: 12px; background: rgba(255,111,0,0.08); border-radius: 8px;">
       <strong style="color:#ffd700;">${tresc}</strong><br><br>
@@ -280,37 +295,38 @@ function generujPodsumowanie() {
   }, 0);
  
   const linie = [
-    "```md",
-    "# inTouch WL – Podsumowanie wlki",
     "",
-    `**Imię postaci:** ${imie}`,
-    `**Wiek postaci:** ${wiek}`,
-    `**Discord ID:** ${discord}`,
-    `**Serwery wcześniej:** ${serwery}`,
-    `**Pomysł na postać / frakcję:** ${frakcja}`,
+    "inTouch WL – Podsumowanie rekrutacji",
     "",
-    "## Regulamin",
+    `Imię postaci: ${imie}`,
+    `Wiek postaci: ${wiek}`,
+    `Discord ID: ${discord}`,
+    `Serwery wcześniej: ${serwery}`,
+    `Pomysł na postać: ${frakcja}`,
+    "",
+    "Regulamin",
   ];
  
   (pytaniaWybrane.regulamin || []).forEach((pyt, i) => {
     const name = `ocena-regulamin-${i}`;
     const radio = document.querySelector(`input[name="${name}"]:checked`);
     const ocena = radio?.value === 'dobrze' ? '✅ Dobrze' : '❌ Źle';
-    linie.push(`- **${pyt}** → ${ocena}`);
+    linie.push(`- ${pyt} → ${ocena}`);
   });
  
   linie.push("");
-  linie.push(" Kreatywność");
+  linie.push("Kreatywność");
  
   (pytaniaWybrane.kreatywnosc || []).forEach((pyt, i) => {
     const name = `ocena-kreatywnosc-${i}`;
     const radio = document.querySelector(`input[name="${name}"]:checked`);
     const ocena = radio?.value === 'dobrze' ? '✅ Dobrze' : '❌ Źle';
-    linie.push(`- ${pyt} → ${ocena}`);
+    const notatka = document.getElementById(`notatka-kreatywnosc-${i}`)?.value.trim();
+    linie.push(`- ${pyt} → ${ocena}${notatka ? `\n  > ${notatka}` : ''}`);
   });
  
   linie.push("");
-  linie.push(" Lore postaci");
+  linie.push("Lore postaci");
  
   (pytaniaWybrane.lore || []).forEach((pyt, i) => {
     const name = `ocena-lore-${i}`;
@@ -320,9 +336,9 @@ function generujPodsumowanie() {
   });
  
   linie.push("");
-  linie.push(`Błędy: ${bledy}`);
+  linie.push(`Błędy (Regulamin + Kreatywność): ${bledy}`);
   linie.push(bledy <= 2
-    ? "WERDYKT: ZDAŁ✅"
+    ? "WERDYKT: ZDAŁ ✅"
     : "WERDYKT: NIE ZDAŁ ❌");
   linie.push("");
  
