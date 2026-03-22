@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IntoTouch WL Helper – Rekrutacja</title>
+  <title>inTouch WL Helper – Notatka</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -119,7 +119,7 @@
  
 <div class="container">
   <header>
-    <h1>IntoTouch WL Helper</h1>
+    <h1>inTouch WL Helper</h1>
     <p style="color:#d1d1d1; margin-top:8px;">Notatka Whitelist</p>
   </header>
  
@@ -281,7 +281,7 @@ function generujPodsumowanie() {
  
   const linie = [
     "```md",
-    "# IntoTouch WL – Podsumowanie rekrutacji",
+    "# inTouch WL – Podsumowanie wlki",
     "",
     `**Imię postaci:** ${imie}`,
     `**Wiek postaci:** ${wiek}`,
@@ -300,31 +300,31 @@ function generujPodsumowanie() {
   });
  
   linie.push("");
-  linie.push("## Kreatywność");
+  linie.push(" Kreatywność");
  
   (pytaniaWybrane.kreatywnosc || []).forEach((pyt, i) => {
     const name = `ocena-kreatywnosc-${i}`;
     const radio = document.querySelector(`input[name="${name}"]:checked`);
     const ocena = radio?.value === 'dobrze' ? '✅ Dobrze' : '❌ Źle';
-    linie.push(`- **${pyt}** → ${ocena}`);
+    linie.push(`- ${pyt} → ${ocena}`);
   });
  
   linie.push("");
-  linie.push("## Lore postaci");
+  linie.push(" Lore postaci");
  
   (pytaniaWybrane.lore || []).forEach((pyt, i) => {
     const name = `ocena-lore-${i}`;
     const radio = document.querySelector(`input[name="${name}"]:checked`);
     const ocena = radio?.value === 'dobrze' ? '✅ Dobrze' : '❌ Źle';
-    linie.push(`- **${pyt}** → ${ocena}`);
+    linie.push(`- ${pyt} → ${ocena}`);
   });
  
   linie.push("");
-  linie.push(`**Błędy (Regulamin + Kreatywność):** ${bledy}`);
+  linie.push(`Błędy: ${bledy}`);
   linie.push(bledy <= 2
-    ? "**WERDYKT:** ZDAŁ POZYTYWNIE ✅"
-    : "**WERDYKT:** DO POPRAWY / NIE ZDAŁ ❌");
-  linie.push("```");
+    ? "WERDYKT: ZDAŁ✅"
+    : "WERDYKT: NIE ZDAŁ ❌");
+  linie.push("");
  
   const tekst = linie.join('\n');
  
@@ -336,7 +336,7 @@ function generujPodsumowanie() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `IntoTouch_WL_${imie.replace(/\s+/g,'_') || 'kandydat'}.txt`;
+  a.download = `inTouch_WL_${imie.replace(/\s+/g,'_') || 'kandydat'}.txt`;
   a.textContent = 'Pobierz podsumowanie (.txt)';
   a.style.cssText = 'display:block; margin:24px 0; padding:14px 28px; background:#ff6f00; color:#0f0c29; border-radius:50px; text-align:center; font-weight:bold; text-decoration:none; box-shadow:0 4px 15px rgba(255,111,0,0.5);';
   div.appendChild(a);
