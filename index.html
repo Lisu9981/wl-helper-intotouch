@@ -9,28 +9,50 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #030307 0%, #c0a612ad 50%, #09090f 100%);
+      background: #09090f;
       color: #e0e0ff;
       min-height: 100vh;
+    }
+    .hero-banner {
+      position: relative;
+      width: 100%;
+      height: 420px;
+      background-image: url('https://images.unsplash.com/photo-1631785745730-e8a7f18f1c98?w=1600&q=80');
+      background-size: cover;
+      background-position: center 40%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.35) 0%,
+        rgba(0,0,0,0.55) 60%,
+        #09090f 100%
+      );
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 0 20px;
     }
     .container {
       max-width: 900px;
       margin: 0 auto;
       padding: 20px 15px;
     }
-    header {
-      text-align: center;
-      padding: 30px 0 20px;
-      background: rgba(0,0,0,0.6);
-      border-bottom: 3px solid #ffe600;
-      box-shadow: 0 4px 20px rgba(255,111,0,0.3);
-    }
+
     h1 {
       margin: 0;
-      font-size: 3rem;
+      font-size: 3.5rem;
       color: #fffb00;
-      text-shadow: 0 0 15px #000000, 0 0 30px #ffd000dc;
-      letter-spacing: 2px;
+      text-shadow: 0 0 20px #000, 0 0 40px #ffd000cc;
+      letter-spacing: 3px;
     }
     h2 {
       color: #fffb00;
@@ -116,13 +138,15 @@
   </style>
 </head>
 <body>
- 
-<div class="container">
-  <header>
+
+<div class="hero-banner">
+  <div class="hero-content">
     <h1>inTouch WL Helper</h1>
-    <p style="color:#d1d1d1; margin-top:8px;">Notatka Whitelist</p>
-  </header>
- 
+    <p style="color:#e8e8b0; margin-top:10px; font-size:1.1rem; letter-spacing:1px; text-shadow:0 0 10px #000;">Notatka Whitelist</p>
+  </div>
+</div>
+
+<div class="container">
   <div class="section">
     <label>Imię:</label>
     <input type="text" id="imie" placeholder="np. Adam">
@@ -296,7 +320,7 @@ function generujPodsumowanie() {
  
   const linie = [
     "",
-    "inTouch WL – Podsumowanie rekrutacji",
+    "inTouch WL – Podsumowanie wlki",
     "",
     `Imię postaci: ${imie}`,
     `Wiek postaci: ${wiek}`,
