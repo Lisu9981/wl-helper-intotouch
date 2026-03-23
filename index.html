@@ -361,7 +361,7 @@ function generujPodsumowanie() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `inTouch_WL_${imie.replace(/\s+/g,'_') || 'kandydat'}.txt`;
+  a.download = `inTouch_WL_${imie.replace(/\s+/g,'_') || 'Gracz'}.txt`;
   a.textContent = 'Pobierz podsumowanie (.txt)';
   a.style.cssText = 'display:block;margin:24px 0;padding:14px 28px;background:#ff6f00;color:#0f0c29;border-radius:50px;text-align:center;font-weight:bold;text-decoration:none;box-shadow:0 4px 15px rgba(255,111,0,0.5);';
   div.appendChild(a);
